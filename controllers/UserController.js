@@ -51,10 +51,30 @@ const addUserFriend = async (req, res) => {
   } catch (error) {}
 };
 
+const updateUser = async (req, res) => {
+    try {
+      const selectedUser = await User.findOneAndUpdate(
+        { _id: req.params.userId },
+        req.body ,
+        { new: true }
+      );
+      if (!selectedUser) {
+        res
+          .status(404)
+          .json({
+            message: "No User found. Please check to see if _id is correct.",
+          });
+      } else {
+        res.status(200).json(selectedUser);
+      }
+    } catch (error) {}
+  };
+
 module.exports = {
   getUsers,
   getSingleUser,
   createUser,
   addUserFriend,
   addUserFriend,
+  updateUser
 };
