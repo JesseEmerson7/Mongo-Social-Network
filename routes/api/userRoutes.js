@@ -1,6 +1,7 @@
-const router = require('express').Router();
+const router = require("express").Router();
 
+router.route("/").get((req, res) => {
+  res.send("this is the user route.. waiting for controllers");
+});
 
-router.route('/').get( (req,res)=>{
-    
-})
+module.exports = router;
