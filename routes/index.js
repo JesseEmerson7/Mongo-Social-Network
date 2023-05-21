@@ -1,8 +1,10 @@
+const router = require('express').Router();
+const apiRoutes = require('./api');
+
+router.use('/api', apiRoutes);
+
+router.use((req, res) => res.send('Wrong route!, Try using /api/users'));
 
 
 
-
-module.exports = (next)=>{
-    console.log('in routes')
-    next();
-}
+module.exports = router;

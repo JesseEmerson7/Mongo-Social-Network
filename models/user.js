@@ -1,4 +1,4 @@
-const { Schema, model } = require("mongoose");
+const { Schema, model, Types } = require("mongoose");
 
 const validateEmail = (email) => {
   // Regular expression for email validation
@@ -7,32 +7,49 @@ const validateEmail = (email) => {
   );
 };
 
-// Schema to create Student model
+// Schema to create user model
 const userSchema = new Schema(
   {
     username: {
       type: String,
       unique: true,
-      required: true,
       trim: true,
+      required: true,
     },
     email: {
-      type: string,
-      required: true,
+      type: String,
       unique: true,
       lowercase: true,
+      required: true,
       validate: {
         validator: validateEmail,
         message: "Please enter a valid email address",
       },
     },
+    thoughts: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "thought",
+      },
+    ],
+    friends: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "user",
+      },
+    ],
   },
   {
     toJSON: {
+      virtuals: true,
       getters: true,
     },
   }
 );
+
+userSchema.virtual("friendCount").get(function () {
+  return this.friends.length;
+});
 
 const User = model("user", userSchema);
 
