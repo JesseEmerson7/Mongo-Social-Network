@@ -13,14 +13,15 @@ const getAllThoughts = async (req, res) => {
 const createThought = async (req, res) => {
   try {
     const newThought = await Thought.create(req.body);
-    const userThought = await User.findByIdAndUpdate(
+    const userThought = await User.findOneAndUpdate(
       {
-        _id: newThought.userId,
+        _id: req.body.userId,
       },
-      { $addToSet: { thoughts: userThought._id } }
+      { $push: { thoughts: newThought._id } },
+      { new: true }
     );
 
-    res.status(200).json(newThought);
+    res.status(200).json(userThought);
   } catch (er) {
     res.status(500).json(er);
     console.log(er);

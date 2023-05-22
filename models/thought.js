@@ -10,29 +10,32 @@ const thoughtSchema = new Schema(
     createdAt: {
       type: Date,
       immutable: true,
-      default: function(){return new Date();} ,
-      get: function () {
-        return date.format(this.createdAt, "ddd, MMM DD YYYY hh:mm A");
+      default: Date.now,
+      get: (dateObj) => {
+        var month = dateObj.getUTCMonth() + 1; //months from 1-12
+        var day = dateObj.getUTCDate();
+        var year = dateObj.getUTCFullYear();
+
+        var newDate = year + "/" + month + "/" + day;
+        return newDate;
       },
     },
     username: {
       type: String,
       required: true,
     },
-    reactions: [
-     reactionSchema
-    ],
+    reactions: [reactionSchema],
   },
   {
     toJSON: {
-        virtuals: true,
+      virtuals: true,
       getters: true,
     },
   }
 );
 
-thoughtSchema.virtual("reactionCount").get( function(){
-    return this.reactions.length;
+thoughtSchema.virtual("reactionCount").get(function () {
+  return this.reactions.length;
 });
 
 // thoughtSchema.pre();
