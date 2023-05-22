@@ -8,12 +8,12 @@ const getUsers = async (req, res) => {
     res.status(500).json(error);
   }
 };
-// TODO: check back on populate thoughts when thoughts data is in there.
+
 const getSingleUser = async (req, res) => {
   try {
     const user = await User.findOne({ _id: req.params.userId })
       .populate('friends')
-    //   .populate('thoughts')
+      .populate('thoughts')
       .select("-__v");
     if (!user) {
       res.status(404).json({ message: "No user found with that ID" });

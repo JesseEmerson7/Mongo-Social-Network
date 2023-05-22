@@ -1,8 +1,23 @@
-const router = require('express').Router();
-const {getAllThoughts, createThought} = require('../../controllers/thoughtController')
+const router = require("express").Router();
+const {
+  getAllThoughts,
+  createThought,
+  deleteThought,
+  getSingleThought,
+  updateThought,
+  postReaction,
+} = require("../../controllers/thoughtController");
 
 //This is http://localhost:3001/api/thoughts routing
 
-router.route('/').get(getAllThoughts).post(createThought);
+router.route("/").get(getAllThoughts).post(createThought);
 
-module.exports = router
+router
+  .route("/:thoughtId")
+  .get(getSingleThought)
+  .delete(deleteThought)
+  .put(updateThought);
+
+router.route("/:thoughtId/reactions").post(postReaction);
+
+module.exports = router;
