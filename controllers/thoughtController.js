@@ -1,5 +1,5 @@
 const { Thought, User } = require("../models");
-
+//Get all thoughts controller
 const getAllThoughts = async (req, res) => {
   try {
     const allThoughts = await Thought.find();
@@ -9,7 +9,7 @@ const getAllThoughts = async (req, res) => {
     console.log(er);
   }
 };
-
+//get single thought by id
 const getSingleThought = async (req, res) => {
   try {
     const thought = await Thought.findOne({ _id: req.params.thoughtId }).select(
@@ -24,7 +24,7 @@ const getSingleThought = async (req, res) => {
     res.status(500).json(er);
   }
 };
-
+// create thought
 const createThought = async (req, res) => {
   try {
     const newThought = await Thought.create(req.body);
@@ -36,13 +36,13 @@ const createThought = async (req, res) => {
       { new: true }
     );
 
-    res.status(200).json(userThought);
+    res.status(200).json(newThought);
   } catch (er) {
     res.status(500).json(er);
     console.log(er);
   }
 };
-
+// update thought by id
 const updateThought = async (req, res) => {
   try {
     const selectedThought = await Thought.findOneAndUpdate(
@@ -62,7 +62,7 @@ const updateThought = async (req, res) => {
     console.log(er);
   }
 };
-
+//delete thought  by id
 const deleteThought = async (req, res) => {
   try {
     const selectedThought = await Thought.findOneAndDelete({
@@ -80,7 +80,7 @@ const deleteThought = async (req, res) => {
     console.log(er);
   }
 };
-
+//post reaction to thought
 const postReaction = async (req, res) => {
   try {
     const selectedThought = await Thought.findOneAndUpdate(
@@ -96,17 +96,24 @@ const postReaction = async (req, res) => {
     console.log(er);
   }
 };
-
+//delete reaction by id
 const deleteReaction = async (req, res) => {
   try {
-    const selectedThought = await Thought.findOne({
-      _id: req.params.thoughtId,
-    });
-    selectedThought.reactions.push(req.body);
-    const updatedReaction = await selectedThought.save();
-    res.status(200).json(updatedReaction);
+    const selectedReaction = await Thought.findOneAndUpdate(
+      { _id: req.params.thoughtId },
+      { $pull: { reactions: { reactionId: req.body.reactionId } } },
+      { new: true }
+    );
+    if (!selectedReaction) {
+      res.status(404).json({
+        message:
+          "No reaction found. Please check to see if reactionId and thought _id is correct .",
+      });
+    } else {
+      res.status(200).json(selectedReaction);
+    }
   } catch (er) {
-    res.status(500);
+    res.status(500).json(er);
     console.log(er);
   }
 };
@@ -118,4 +125,5 @@ module.exports = {
   getSingleThought,
   updateThought,
   postReaction,
+  deleteReaction,
 };

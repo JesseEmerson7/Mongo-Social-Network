@@ -38,8 +38,6 @@ thoughtSchema.virtual("reactionCount").get(function () {
   return this.reactions.length;
 });
 
-// thoughtSchema.pre();
-
 const Thought = model("thought", thoughtSchema);
 
 module.exports = Thought;

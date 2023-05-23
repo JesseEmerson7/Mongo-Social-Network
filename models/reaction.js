@@ -1,7 +1,7 @@
 const { Schema, Types } = require("mongoose");
 const date = require("date-and-time");
 
-// Schema to create thought model
+// Schema to create reaction sub document inside of thought model
 const reactionSchema = new Schema(
   {
     reactionId: {
@@ -20,9 +20,14 @@ const reactionSchema = new Schema(
     createdAt: {
       type: Date,
       immutable: true,
-      default: () => Date.now(),
-      get: function () {
-        return date.format(this, "ddd, MMM DD YYYY hh:mm A");
+      default: Date.now,
+      get: (dateObj) => {
+        var month = dateObj.getUTCMonth() + 1; //months from 1-12
+        var day = dateObj.getUTCDate();
+        var year = dateObj.getUTCFullYear();
+
+        var newDate = year + "/" + month + "/" + day;
+        return newDate;
       },
     },
   },
